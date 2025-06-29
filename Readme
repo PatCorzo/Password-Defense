@@ -1,0 +1,37 @@
+# 🔐 Password Strength Tester
+
+## 📘 Project Overview
+
+In today's digital environment, weak passwords pose a serious threat to personal and organizational security. The **Password Strength Tester** is a Python-based tool designed to evaluate the strength of user-generated passwords and offer actionable feedback. By analyzing factors such as length, complexity, common patterns, and dictionary-based weaknesses, this tool encourages safer password practices through clear, constructive guidance.
+
+Optional support for external breach-detection APIs (e.g., HaveIBeenPwned) allows users to verify if a password has been compromised in known data leaks.
+
+---
+
+## 🌟 Features
+
+- Evaluates passwords based on:
+  - Minimum length
+  - Use of upper and lowercase letters, digits, and special characters
+  - Common word and pattern detection
+- Assigns strength ratings: `Weak`, `Medium`, or `Strong`
+- Generates customized user feedback to improve password security
+- Modular, easy-to-extend design (e.g., add API-based breach checking)
+
+---
+
+## ⚙️ Setup and Usage
+
+### ✅ Prerequisites
+
+- Python 3.7 or higher
+- No external libraries are required for the basic version
+
+### 💻 How to Run
+
+1. **Clone or download** this repository to your local machine
+2. Open a terminal in the project directory
+3. Run the script:
+
+```bash
+python password_strength_tester.py
