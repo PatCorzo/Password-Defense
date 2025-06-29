@@ -1,0 +1,64 @@
+import re
+import string
+
+# A simple list of common words; in practice, load a larger dictionary
+common_words = {'password', '123456', 'qwerty', 'letmein', 'admin'}
+
+def contains_common_word(password):
+    return any(word in password.lower() for word in common_words)
+
+def evaluate_password(password):
+    feedback = []
+    strength = 0
+
+    # Length Check
+    if len(password) < 8:
+        feedback.append("Password is too short. Use at least 8 characters.")
+    elif len(password) >= 12:
+        strength += 2
+    else:
+        strength += 1
+
+    # Character Variety Checks
+    categories = {
+        'uppercase': any(c.isupper() for c in password),
+        'lowercase': any(c.islower() for c in password),
+        'digits': any(c.isdigit() for c in password),
+        'special': any(c in string.punctuation for c in password)
+    }
+
+    category_count = sum(categories.values())
+    if category_count >= 3:
+        strength += 2
+    elif category_count == 2:
+        strength += 1
+    else:
+        feedback.append("Use a mix of uppercase, lowercase, digits, and special characters.")
+
+    # Dictionary Pattern Check
+    if contains_common_word(password):
+        strength -= 1
+        feedback.append("Avoid common passwords or dictionary words.")
+
+    # Strength Rating
+    if strength >= 4:
+        rating = "Strong"
+    elif strength == 3:
+        rating = "Medium"
+    else:
+        rating = "Weak"
+        feedback.append("Consider making your password longer and more complex.")
+
+    return {
+        'password': password,
+        'strength': rating,
+        'feedback': feedback
+    }
+
+# 🔍 Example Usage
+if __name__ == "__main__":
+    test_pw = input("Enter a password to test: ")
+    result = evaluate_password(test_pw)
+    print(f"\nStrength: {result['strength']}")
+    for msg in result['feedback']:
+        print(f"- {msg}")
