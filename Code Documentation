@@ -1,0 +1,105 @@
+"""
+Password Strength Tester
+-------------------------
+Evaluates the strength of user-generated passwords based on length,
+character variety, and common password weaknesses. Provides feedback
+to help users strengthen their credentials.
+
+Author: Chuck
+"""
+
+import re
+import string
+
+# Set of weak/common words to flag in passwords
+common_words = {
+    'password', '123456', 'qwerty', 'letmein', 'admin', 'welcome', 'monkey'
+}
+
+def contains_common_word(password):
+    """
+    Check if the password contains any common words or weak patterns.
+
+    Args:
+        password (str): The password to evaluate.
+
+    Returns:
+        bool: True if a common word is found in the password; otherwise, False.
+    """
+    return any(word in password.lower() for word in common_words)
+
+def evaluate_password(password):
+    """
+    Analyze the password strength and return a structured rating and recommendations.
+
+    Args:
+        password (str): The user-inputted password.
+
+    Returns:
+        dict: A dictionary containing the original password, a strength rating,
+              and a list of feedback messages.
+    """
+    feedback = []
+    score = 0
+
+    # Check length
+    if len(password) < 8:
+        feedback.append("Password is too short. Use at least 8 characters.")
+    elif len(password) >= 12:
+        score += 2
+    else:
+        score += 1
+
+    # Check character variety
+    has_upper = any(c.isupper() for c in password)
+    has_lower = any(c.islower() for c in password)
+    has_digit = any(c.isdigit() for c in password)
+    has_special = any(c in string.punctuation for c in password)
+
+    variety_count = sum([has_upper, has_lower, has_digit, has_special])
+    
+    if variety_count >= 3:
+        score += 2
+    elif variety_count == 2:
+        score += 1
+    else:
+        feedback.append("Include a mix of uppercase, lowercase, digits, and special characters.")
+
+    # Check for common dictionary-based weaknesses
+    if contains_common_word(password):
+        score -= 1
+        feedback.append("Avoid common passwords or dictionary words.")
+
+    # Assign strength rating
+    if score >= 4:
+        rating = "Strong"
+    elif score == 3:
+        rating = "Medium"
+    else:
+        rating = "Weak"
+        feedback.append("Consider making your password longer and more complex.")
+
+    return {
+        "password": password,
+        "strength": rating,
+        "feedback": feedback
+    }
+
+def main():
+    """
+    Run the password strength checker interactively from the command line.
+    """
+    print("🔐 Password Strength Tester 🔐")
+    user_input = input("Enter a password to evaluate: ")
+    result = evaluate_password(user_input)
+
+    print(f"\nStrength Rating: {result['strength']}")
+    if result['feedback']:
+        print("Recommendations:")
+        for message in result['feedback']:
+            print(f"- {message}")
+    else:
+        print("✅ Your password looks strong!")
+
+if __name__ == "__main__":
+    main()
